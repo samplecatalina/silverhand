@@ -62,8 +62,11 @@ def remove_question_from_list(ix,questions,selected_project):
 
 def handle_project():
     if st.session_state.get('project_name') and st.session_state.get('project_description'):
-        fast_api_utils.insert_project(st.session_state.project_name, st.session_state.project_description)
-        streamlit_js_eval(js_expressions="parent.window.location.reload()")
+        if response := fast_api_utils.insert_project(st.session_state.project_name, st.session_state.project_description):
+            # Refresh the projects data
+            get_data_from_db(None, None, None)
+            return True
+    return False
 
 def ask_rag_question_update_questions(questions, ix):
     if response := fast_api_utils.ask_rag_question(questions[ix]):

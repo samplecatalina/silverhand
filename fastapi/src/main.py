@@ -145,6 +145,13 @@ def get_rag_context(question: Annotated[str, Form()], files: Annotated[List[str]
         return result 
     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=config.ERROR_MESSAGE)
 
+@app.delete("/delete_project")
+def delete_project_from_db(project_id: str):
+    '''delete project and its associated questions from DB'''
+    if pgvector_utils.delete_project(project_id):
+        return {"result": True}
+    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=config.ERROR_MESSAGE)
+
 if __name__ == "__main__":
     # src.main:app --proxy-headers --host 0.0.0.0 --port 80 
     uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True)

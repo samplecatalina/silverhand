@@ -234,5 +234,28 @@ def rag_context(question, files):
         print(f'ERROR rag_context: {e}')
         conn.rollback()
 
+def delete_project(project_id):
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return False
+        try:
+            cur = conn.cursor()
+            # First delete associated questions
+            cur.execute(f"DELETE FROM questions WHERE project_id = {project_id}")
+            # Then delete the project
+            cur.execute(f"DELETE FROM projects WHERE id = {project_id}")
+            conn.commit()
+            cur.close()
+            return True
+        except Exception as e:
+            print(f'ERROR delete_project: {e}')
+            conn.rollback()
+            return False
+    except Exception as e:
+        print(f'ERROR delete_project: {e}')
+        conn.rollback()
+        return False
+
 if __name__ == "__main__":
     pass 

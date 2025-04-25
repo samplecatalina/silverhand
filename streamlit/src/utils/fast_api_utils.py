@@ -69,6 +69,16 @@ def insert_project(project_name:str, project_description:str)->object:
     except Exception as e:
         print(f'ERROR: {e}')
 
+def delete_project(project_id:str)->bool:
+    try:
+        params = {'project_id':project_id}
+        if response := requests.delete(f'{config.FASTAPI_URL}delete_project',params=params):
+            result = parse_result_helper(response, {'result': False})
+            return result.get('result', False)
+    except Exception as e:
+        print(f'ERROR delete_project: {e}')
+        return False
+
 def save_questions(questions:list[dict],selected_project:dict)->object:
     try:
         project_id = selected_project.get('id')
