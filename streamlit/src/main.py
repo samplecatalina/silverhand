@@ -7,12 +7,20 @@ import utils.fast_api_utils as fast_api_utils
 import utils.fe_utils as fe_utils 
 
 def show_new_project_page():
-    st.header('Create project', anchor='create-project')
+    st.header('Create Project', anchor='create-project')
     with st.form("my_form"):
-        st.text_input('Add your project name here', key='project_name')
-        st.text_area('Add your project description here', key='project_description')
-        if st.form_submit_button("Submit"):
-            utils.handle_project() 
+        st.text_input('Enter your project name here', key='project_name')
+        st.text_area('Enter your project description here', key='project_description')
+        if st.form_submit_button("Create"):
+            utils.handle_project()
+            # Refresh the projects data
+            utils.get_data_from_db(st.session_state.get('projects'),st.session_state.get('files'),st.session_state.get('credentials'))
+            # Set the selected project to the newly created one
+            if st.session_state.get('project_name'):
+                st.session_state.selected_project = st.session_state.project_name
+                # Navigate to project workspace
+                st.session_state.current_page = 'project_workspace'
+                st.rerun()
 
 def show_file_upload_popup():
     with st.form('Popup File Upload'):
@@ -24,52 +32,44 @@ def show_file_upload_popup():
         st.form_submit_button('Submit', on_click=utils.submit_manual_text)
 
 def show_project_workspace():
-    tab1, tab2 = st.tabs(['Upload Supporting Files/ Text', 'Generate Text'])
+    if not st.session_state.get('projects'):
+        st.write('No projects found. Please create a new project first.')
+        if st.button('← Back to Home', key='workspace_back_to_home'):
+            st.session_state.current_page = 'landing'
+            st.rerun()
+        return
 
-    with tab1: 
-        st.header('Upload a file', anchor='upload-a-file')
-        with st.form('Manual File Upload'):
-            st.file_uploader('Please upload your files',type=['pdf', 'txt'], key='submit_files' ) 
-            st.form_submit_button('Submit', on_click=utils.submit_files)    
-             
-        st.header('Manual text upload ')
-        with st.form('Manual Text Upload'):
-            st.text_area('Please add supporting text ', key='manual_text')
-            st.form_submit_button('Submit', on_click=utils.submit_manual_text)
+    project_dict = {x[1]:{'id':x[0], 'name':x[1], 'description':x[2]} for x in st.session_state.projects}
+    
+    st.header('Select what files you want to use', anchor='select-a-file')
+    if st.session_state.get('files'):
+        st.multiselect('Select your files that have been uploaded to use as your knowledge base',[x[1] for x in st.session_state.files],key='selected_files')
+    else:
+        st.write('No files found, please upload files". ')
 
-    with tab2:
-        project_dict = {x[1]:{'id':x[0], 'name':x[1], 'description':x[2]} for x in st.session_state.projects}
-        
-        st.header('Select what files you want to use', anchor='select-a-file')
-        if st.session_state.get('files'):
-            st.multiselect('Select your files that have been uploaded to use as your knowledge base',[x[1] for x in st.session_state.files],key='selected_files')
-        else:
-            st.write('No files found, please upload files". ')
+    st.markdown("### Want more files to work with?")
+    if st.button('Add New'):
+        with st.expander("Add More Files", expanded=True):
+            show_file_upload_popup()
 
-        st.markdown("### Want more files to work with?")
-        if st.button('Add New'):
-            with st.expander("Add More Files", expanded=True):
-                show_file_upload_popup()
+    # Initialize selected_project if not present
+    if 'selected_project' not in st.session_state and project_dict:
+        st.session_state.selected_project = list(project_dict.keys())[0]
 
-        # Initialize selected_project if not present
-        if 'selected_project' not in st.session_state and project_dict:
-            st.session_state.selected_project = list(project_dict.keys())[0]
-
-        if st.session_state.get('selected_project') and project_dict and (not st.session_state.get('questions')):
+    # Ensure the selected project exists in the project dictionary
+    if st.session_state.get('selected_project') and st.session_state.selected_project in project_dict:
+        if not st.session_state.get('questions'):
             st.session_state['questions'] = fast_api_utils.get_questions(project_dict[st.session_state.selected_project]) 
 
-        st.header('Input Questions ')
+        st.header('Current Prompts')
         if st.session_state.get('questions'):
-            if st.session_state.get('selected_project') in project_dict:
-                if st.session_state.get('selected_files'):
-                    fe_utils.render_questions(st.session_state.get('questions'), st.session_state.get('selected_files',[]), project_dict[st.session_state.selected_project])
-                else:
-                    st.write('No source files selected. You can still view and edit questions, but they will not reference any source files.')
-                    fe_utils.render_questions(st.session_state.get('questions'), [], project_dict[st.session_state.selected_project])
+            if st.session_state.get('selected_files'):
+                fe_utils.render_questions(st.session_state.get('questions'), st.session_state.get('selected_files',[]), project_dict[st.session_state.selected_project])
             else:
-                st.write('Please select a project first.')
+                st.write('No source files selected. You can still view and edit questions, but they will not reference any source files.')
+                fe_utils.render_questions(st.session_state.get('questions'), [], project_dict[st.session_state.selected_project])
         else: 
-            st.write('No questions found. Please add a question.')
+            st.write('No existing prompts found. Please add a prompt.')
 
         st.header('Add New Prompts')
         with st.form("add_question_form"):
@@ -84,6 +84,11 @@ def show_project_workspace():
                     parsed_questions = utils.format_questions(st.session_state.questions)
                     if (response := fast_api_utils.save_questions(parsed_questions,project_dict[st.session_state.selected_project])) and response.get('result'):
                         st.toast('Prompts saved!')
+    else:
+        st.write('Please select a valid project.')
+        if st.button('← Back to Projects', key='workspace_back_to_projects'):
+            st.session_state.current_page = 'archived'
+            st.rerun()
 
 def show_archived_project_page():
     if st.session_state.get('projects'):
@@ -99,7 +104,7 @@ def show_archived_project_page():
         st.write('No projects found. Please create a new project first.')
 
 def main():
-    st.title('Sliverhand - Your customized AI Essay Writer')
+    st.title('Sliverhand - Your Customized AI Essay Writer')
 
     utils.get_data_from_db(st.session_state.get('projects'),st.session_state.get('files'),st.session_state.get('credentials'))
     fe_utils.check_credentials()
@@ -125,19 +130,19 @@ def main():
                 st.rerun()
     
     elif st.session_state.current_page == 'new_project':
-        if st.button('← Back to Home'):
+        if st.button('← Back to Home', key='new_project_back_to_home'):
             st.session_state.current_page = 'landing'
             st.rerun()
         show_new_project_page()
     
     elif st.session_state.current_page == 'archived':
-        if st.button('← Back to Home'):
+        if st.button('← Back to Home', key='archived_back_to_home'):
             st.session_state.current_page = 'landing'
             st.rerun()
         show_archived_project_page()
 
     elif st.session_state.current_page == 'project_workspace':
-        if st.button('← Back to Projects'):
+        if st.button('← Back to Projects', key='workspace_back_to_projects_main'):
             st.session_state.current_page = 'archived'
             st.rerun()
         show_project_workspace()
