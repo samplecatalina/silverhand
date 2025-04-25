@@ -88,7 +88,7 @@ def show_project_workspace():
 
     st.header('Add New Prompts')
     with st.form("add_question_form"):
-        new_question = st.text_area('Add new prompts to Sliverhand here', height=200)
+        new_question = st.text_area('Add new prompts to Silverhand here', height=200)
         if st.form_submit_button("Submit"):
             utils.add_question_helper(project_dict, new_question)
 
@@ -186,7 +186,7 @@ def show_archived_project_page():
         st.write('No projects found. Please create a new project first.')
 
 def main():
-    st.title('Sliverhand - Your Customized AI Essay Writer')
+    st.title('Silverhand - Your Customized AI Essay Writer')
 
     utils.get_data_from_db(st.session_state.get('projects'),st.session_state.get('files'),st.session_state.get('credentials'))
     fe_utils.check_credentials()

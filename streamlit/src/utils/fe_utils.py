@@ -11,7 +11,7 @@ def render_questions(questions,files,selected_project):
     if questions:
         for ix, question in enumerate(questions):
             with st.expander(f"{ix+1}\. {question[1]}",expanded=True):
-                st.text_area('Sliverhand\'s answer will be here: ',value=question[2], key=f'question_{ix}', height=200)
+                st.text_area('Silverhand\'s answer will be here: ',value=question[2], key=f'question_{ix}', height=200)
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     if st.button('Generate response', key=f'gen_button_{ix}'):

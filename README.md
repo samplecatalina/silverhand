@@ -1,4 +1,4 @@
-This repository provides the **Sliverhand**, an end-to-end solution leveraging state-of-the-art AI frameworks to automate and refine application writing. It orchestrates specialized legal, ethical, and essay-review agents using Microsoft’s AutoGen multi-agent framework, combines a Retrieval-Augmented Generation (RAG) pipeline with PostgreSQL/pgvector for contextual document retrieval, and exposes a robust REST API with FastAPI and Pydantic models. A Streamlit front-end offers a user-friendly interface, and the entire stack is containerized via Docker for seamless deployment.  
+This repository provides the **Silverhand**, an end-to-end solution leveraging state-of-the-art AI frameworks to automate and refine application writing. It orchestrates specialized legal, ethical, and essay-review agents using Microsoft’s AutoGen multi-agent framework, combines a Retrieval-Augmented Generation (RAG) pipeline with PostgreSQL/pgvector for contextual document retrieval, and exposes a robust REST API with FastAPI and Pydantic models. A Streamlit front-end offers a user-friendly interface, and the entire stack is containerized via Docker for seamless deployment.  
 
 ## Features
 
@@ -57,8 +57,8 @@ This repository provides the **Sliverhand**, an end-to-end solution leveraging s
 
 2. **Clone & Configure**  
    ```bash
-   git clone https://github.com/samplecatalina/sliverhand.git
-   cd sliverhand
+   git clone https://github.com/samplecatalina/silverhand.git
+   cd silverhand
    # Set OPENAI_API_KEY and database credentials in ./config/.env
    ```
 
