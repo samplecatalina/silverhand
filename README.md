@@ -1,4 +1,13 @@
 This repository provides the **Silverhand**, an end-to-end solution leveraging state-of-the-art AI frameworks to automate and refine application writing. It orchestrates specialized legal, ethical, and essay-review agents using Microsoft’s AutoGen multi-agent framework, combines a Retrieval-Augmented Generation (RAG) pipeline with PostgreSQL/pgvector for contextual document retrieval, and exposes a robust REST API with FastAPI and Pydantic models. A Streamlit front-end offers a user-friendly interface, and the entire stack is containerized via Docker for seamless deployment.  
+## Demo 
+
+![image](./media/streamlit-starting.png)
+![image](./media/demo-silverhand-cover.jpg)
+![image](./media/history-prompts-ans.png)
+![image](./media/view-agent-chat.png)
+![image](./media/view-auto-be.png)
+
+A demo video of this [application](https://youtu.be/s3rSBpWhd1o).
 
 ## Features
 
