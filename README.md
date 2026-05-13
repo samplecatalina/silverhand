@@ -12,28 +12,28 @@ A demo video of this [application](https://youtu.be/s3rSBpWhd1o).
 ## Features
 
 - **Multi-Agent Orchestration**  
-  Utilizes Microsoft AutoGen to define and coordinate multiple AI agents (e.g., legal, ethical, essay-review agents) in a conversation framework for iterative content refinement citeturn0search0turn0search2.
+  Utilizes Microsoft AutoGen to define and coordinate multiple AI agents (e.g., legal, ethical, essay-review agents) in a conversation framework for iterative content refinement.
 
 - **Retrieval-Augmented Generation (RAG) Pipeline**  
-  Implements a RAG workflow to ingest, split, embed, and retrieve document chunks, ensuring responses are grounded in relevant source material citeturn1search1turn1search2.
+  Implements a RAG workflow to ingest, split, embed, and retrieve document chunks, ensuring responses are grounded in relevant source material.
 
 - **Vector Embeddings with pgvector**  
-  Stores and queries high-dimensional embeddings in PostgreSQL via the pgvector extension, interfaced through LangChain’s vectorstore abstraction for efficient similarity search citeturn1search0.
+  Stores and queries high-dimensional embeddings in PostgreSQL via the pgvector extension, interfaced through LangChain’s vectorstore abstraction for efficient similarity search.
 
 - **FastAPI-Powered REST API**  
-  Exposes endpoints for document upload, agent orchestration, and retrieval operations using FastAPI’s OpenAPI-based auto-documentation (Swagger UI) and Pydantic data validation citeturn3search0.
+  Exposes endpoints for document upload, agent orchestration, and retrieval operations using FastAPI’s OpenAPI-based auto-documentation (Swagger UI) and Pydantic data validation.
 
 - **Streamlit Front-End**  
-  Provides an interactive web application built with Streamlit for users to submit requests, view agent dialogues, and download refined application drafts citeturn4search0.
+  Provides an interactive web application built with Streamlit for users to submit requests, view agent dialogues, and download refined application drafts.
 
 - **Semantic Text Splitting**  
-  Includes a `SemanticChunker` that adaptively segments large documents based on embedding similarity, maximizing retrieval precision and contextual coherence citeturn6search0.
+  Includes a `SemanticChunker` that adaptively segments large documents based on embedding similarity, maximizing retrieval precision and contextual coherence.
 
 - **Containerized Deployment**  
-  Encapsulates the entire toolchain within Docker containers for consistent development, testing, and production environments citeturn5search0.
+  Encapsulates the entire toolchain within Docker containers for consistent development, testing, and production environments.
 
 - **OpenAI API Integration**  
-  Leverages the OpenAI Embeddings and Chat Completion APIs to generate and refine text with context-aware LLM calls citeturn7search0.
+  Leverages the OpenAI Embeddings and Chat Completion APIs to generate and refine text with context-aware LLM calls.
 
 ## Architecture
 
